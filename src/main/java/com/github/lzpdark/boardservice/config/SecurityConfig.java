@@ -13,8 +13,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
-import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -47,23 +46,12 @@ public class SecurityConfig {
             RememberMeServices rememberMeServices
     ) throws Exception {
         http
-                .cors(new Customizer<CorsConfigurer<HttpSecurity>>() {
-                    @Override
-                    public void customize(CorsConfigurer<HttpSecurity> z) {
-                        z.disable();
-                    }
-                })
-                .csrf(new Customizer<CsrfConfigurer<HttpSecurity>>() {
-                    @Override
-                    public void customize(CsrfConfigurer<HttpSecurity> z) {
-                        z.disable();
-                    }
-                })
+                .cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-//                        .requestMatchers(HttpMethod.POST, "/auth/anonymous").permitAll()
-//                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-//                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/anonymous").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->
