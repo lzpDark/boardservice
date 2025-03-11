@@ -16,10 +16,10 @@ CREATE TABLE authorities (
 
 CREATE UNIQUE INDEX ix_auth_username ON authorities (username, authority);
 
-# remember-me persistent
+--  remember-me persistent
 CREATE TABLE persistent_logins (
     username  VARCHAR(64) NOT NULL,
     series    VARCHAR(64) PRIMARY KEY,
     token     VARCHAR(64) NOT NULL,
     last_used TIMESTAMP   NOT NULL
-)
+);
